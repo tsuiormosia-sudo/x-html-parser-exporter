@@ -10,8 +10,7 @@ st.set_page_config(page_title="X HTML Exporter", layout="wide")
 
 st.title("X / Twitter 本地 HTML 解析导出")
 
-default_path = "/Users/oria/Desktop/(1) MGM Rewards (@MGMRewards) _ X.html"
-input_path = st.text_input("本地 HTML 路径", value=default_path)
+input_path = st.text_input("本地 HTML 路径（云端部署时通常用不上）", value="")
 uploaded = st.file_uploader("或上传 HTML 文件", type=["html", "htm"])
 
 export_csv = st.checkbox("导出 CSV", value=True)
@@ -24,6 +23,9 @@ if run:
         raw = uploaded.getvalue().decode("utf-8", errors="replace")
         _, rows = parse_x_profile_html(raw)
     else:
+        if not input_path:
+            st.error("请上传 HTML 文件，或填写本地 HTML 路径。")
+            st.stop()
         _, rows = parse_x_profile_html_file(input_path)
 
     df = pd.DataFrame(rows)
